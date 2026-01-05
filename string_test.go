@@ -8,7 +8,7 @@ import (
 
 func TestStringToBytes(t *testing.T) {
 	bs := "hello world"
-	b := StringTobytes(bs)
+	b := StringToBytes(bs)
 
 	if bss := string(b); strings.Compare(bs, bss) != 0 {
 		t.Errorf("expected %q but got %q", bs, bss)
