@@ -6,7 +6,7 @@ import (
 )
 
 // Credit to https://github.com/valyala/fasthttp?tab=readme-ov-file#tricks-with-byte-buffers
-func StringTobytes(s string) (b []byte) {
+func StringToBytes(s string) (b []byte) {
 	slice := (*reflect.SliceHeader)(unsafe.Pointer(&b))
 	stringP := (*reflect.StringHeader)(unsafe.Pointer(&s))
 

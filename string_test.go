@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestStringTobytes(t *testing.T) {
+func TestStringToBytes(t *testing.T) {
 	bs := "hello world"
 	b := StringTobytes(bs)
 
