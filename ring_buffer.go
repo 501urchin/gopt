@@ -47,7 +47,7 @@ func (rb *RingBuffer[T]) Insert(vals ...T) {
 		rb.buf[rb.headIdx] = val
 		rb.headIdx++
 
-		if rb.headIdx >= rb.cap-1 {
+		if rb.headIdx >= rb.cap {
 			rb.headIdx = 0
 		}
 	}
