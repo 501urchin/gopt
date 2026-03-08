@@ -38,9 +38,8 @@ func NewRingBuffer[T NumberConstraint](cap int, initialValues ...T) *RingBuffer[
 
 // insert values into the ring buffer
 func (rb *RingBuffer[T]) Insert(vals ...T) {
-	rbLen := len(rb.buf)
 	for _, val := range vals {
-		if rbLen < rb.cap {
+		if len(rb.buf) < rb.cap {
 			rb.buf = append(rb.buf, val)
 			continue
 		}

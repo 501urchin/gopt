@@ -1,6 +1,8 @@
 package gopt
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestRingBuffer(t *testing.T) {
 	rb := NewRingBuffer[int](3)
@@ -65,7 +67,6 @@ func TestRingBuffer(t *testing.T) {
 			t.Errorf("ring buffer failed to return correct tail: excpected %d but got %d", 4, tail)
 		}
 	})
-
 }
 
 func BenchmarkRingbuffer(b *testing.B) {
