@@ -68,9 +68,19 @@ func (rb *RingBuffer[T]) At(i int) T {
 	return rb.buf[idx]
 }
 
-// returns the head val of the ring buffer
+// returns the oldest inserted value in the ring buffer
 func (rb *RingBuffer[T]) Head() T {
 	return rb.buf[rb.headIdx]
+}
+
+// returns the latest inserted value in the ring buffer
+func (rb *RingBuffer[T]) Tail() T {
+	idx := rb.headIdx - 1
+	if idx < 0 {
+		idx = rb.cap - 1
+	}
+
+	return rb.buf[idx]
 }
 
 func (rb *RingBuffer[T]) Cap() int {

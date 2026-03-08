@@ -18,7 +18,7 @@ func TestRingBuffer(t *testing.T) {
 
 	})
 
-	t.Run("initial values", func(t *testing.T) {
+	t.Run("head", func(t *testing.T) {
 		rb.Insert(1)
 		rb.Insert(2)
 		rb.Insert(3)
@@ -59,6 +59,13 @@ func TestRingBuffer(t *testing.T) {
 			t.Errorf("ring buffer failed to return correct head: excpected %d but got %d", 2, h)
 		}
 	})
+
+	t.Run("tail", func(t *testing.T) {
+		if tail := rb.Tail(); tail != 4 {
+			t.Errorf("ring buffer failed to return correct tail: excpected %d but got %d", 4, tail)
+		}
+	})
+
 }
 
 func BenchmarkRingbuffer(b *testing.B) {
