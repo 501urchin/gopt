@@ -77,6 +77,39 @@ func TestBitsetAt(t *testing.T) {
 	})
 }
 
+func TestNewBitset(t *testing.T) {
+
+	t.Run("valid case", func(t *testing.T) {
+		bs := NewBitset(12)
+
+		if len(bs.b) != 2 {
+			t.Error("failed to create a bitset of the expected size")
+		}
+	})
+
+	t.Run("negative size", func(t *testing.T) {
+		defer func() {
+			err := recover()
+			if err == nil {
+				t.Error("failed to panic on negative index")
+			}
+		}()
+
+		bs := NewBitset(-1)
+		t.Error("failed to panic on negative index")
+		_ = bs
+	})
+
+	t.Run("zero size", func(t *testing.T) {
+
+		bs := NewBitset()
+		if len(bs.b) != 0 {
+			t.Error("failed to create a bitset of the expected size")
+		}
+	})
+
+}
+
 func BenchmarkBitset(b *testing.B) {
 	b.Run("normal", func(b *testing.B) {
 		n := []bool{true, false, true}

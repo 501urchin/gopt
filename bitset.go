@@ -4,6 +4,19 @@ type Bitset struct {
 	b []uint8
 }
 
+func NewBitset(size ...int) *Bitset {
+	hasSize := len(size) != 0
+	if hasSize && size[0] < 0 {
+		panic("please provide a size thats > 0")
+	}
+
+	if hasSize {
+		return &Bitset{make([]uint8, (size[0]+7)/8)}
+	}
+
+	return &Bitset{make([]uint8, 0)}
+}
+
 func (bs *Bitset) At(idx int) bool {
 	if idx < 0 {
 		panic("cannot index on negative")
