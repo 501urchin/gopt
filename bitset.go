@@ -14,6 +14,10 @@ func (bs *Bitset) At(idx int) bool {
 	internalIndex := (idx + 7) / 8
 	next := internalIndex*8 - idx
 
+	if internalIndex > len(bs.b) {
+		panic("index overflows")
+	}
+
 	b := bs.b[internalIndex-1] >> next & 0b00000001
 
 	return b != 0
