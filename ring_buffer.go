@@ -10,14 +10,13 @@ type NumberConstraint interface {
 		~float32 | ~float64
 }
 
-// TODO: make it thread safe either by using lock free queues or a RWMutex
 type RingBuffer[T NumberConstraint] struct {
 	cap     int
 	headIdx int
 	buf     []T
 }
 
-// ring buffer is not thread safe
+// NewRingBuffer created a new ring buffer. note that the ring buffer is not thread safe
 func NewRingBuffer[T NumberConstraint](cap int, initialValues ...T) *RingBuffer[T] {
 	if cap <= 0 {
 		panic(fmt.Errorf("invalid capacity: excpect a cap greater than 0 but got %d", cap))
@@ -36,7 +35,7 @@ func NewRingBuffer[T NumberConstraint](cap int, initialValues ...T) *RingBuffer[
 	return rb
 }
 
-// insert values into the ring buffer
+// Insert values into the ring buffer
 func (rb *RingBuffer[T]) Insert(vals ...T) {
 	for _, val := range vals {
 		if len(rb.buf) < rb.cap {
@@ -53,7 +52,7 @@ func (rb *RingBuffer[T]) Insert(vals ...T) {
 	}
 }
 
-// helper function to make indexing the ring buffer simpler. this is eq to slice[i]
+// At function to make indexing the ring buffer simpler. this is eq to slice[i]
 func (rb *RingBuffer[T]) At(i int) T {
 	if i < 0 || i >= rb.cap {
 		panic(fmt.Errorf("index out of range [%d] with length %d", i, rb.cap))
@@ -67,12 +66,12 @@ func (rb *RingBuffer[T]) At(i int) T {
 	return rb.buf[idx]
 }
 
-// returns the oldest inserted value in the ring buffer
+// Head returns the oldest inserted value in the ring buffer
 func (rb *RingBuffer[T]) Head() T {
 	return rb.buf[rb.headIdx]
 }
 
-// returns the latest inserted value in the ring buffer
+// Tail returns the latest inserted value in the ring buffer
 func (rb *RingBuffer[T]) Tail() T {
 	idx := rb.headIdx - 1
 	if idx < 0 {
