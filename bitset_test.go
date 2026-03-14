@@ -1,8 +1,28 @@
 package gopt
 
 import (
+	"slices"
 	"testing"
 )
+
+func TestBitsetIter(t *testing.T) {
+	bs := Bitset{
+		b: []uint8{0b10101010},
+	}
+
+	res := make([]bool, 0, 8)
+
+	ex := []bool{true, false, true, false, true, false, true, false}
+
+	for b := range bs.Items {
+		res = append(res, b)
+	}
+
+	if !slices.Equal(res, ex) {
+		t.Errorf("iterator failed since slice dont match: expected %v but got %v", ex, res)
+	}
+
+}
 
 func TestBitsetAt(t *testing.T) {
 	bs := Bitset{
@@ -78,7 +98,6 @@ func TestBitsetAt(t *testing.T) {
 }
 
 func TestNewBitset(t *testing.T) {
-
 	t.Run("valid case", func(t *testing.T) {
 		bs := NewBitset(12)
 

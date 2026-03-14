@@ -17,6 +17,20 @@ func NewBitset(size ...int) *Bitset {
 	return &Bitset{make([]uint8, 0)}
 }
 
+// Items is a iterator for the bitset
+//	var bitSet BitSet
+//	for b := range bitSet.Items {
+//		// handle b
+//	}
+func (bs *Bitset) Items(yield func(bool) bool) {
+	for i := range len(bs.b) * 8 {
+		if !yield(bs.At(i)) {
+			return
+		}
+	}
+
+}
+
 func (bs *Bitset) At(idx int) bool {
 	if idx < 0 {
 		panic("cannot index on negative")
