@@ -80,31 +80,34 @@ func (bs *Bitset) Set(idx int, state bool) {
 	if idx >= bs.len {
 		panic(fmt.Errorf("invalid bitset index %d of len %d", idx, bs.len))
 	}
-
 	idx++
+	shiftIndex := idx
+	if idx > 8 {
+		shiftIndex = idx % 8
+	}
 
 	internalIndex := (idx + 7) / 8
-
 	if internalIndex > len(bs.b) {
 		panic("index overflows")
 	}
-
 	original := bs.b[internalIndex-1]
 
 	if !state {
-		bs.b[internalIndex-1] = original ^ 0b00000001<<(8-internalIndex)
+		bs.b[internalIndex-1] = original ^ 0b00000001<<(8-shiftIndex)
 	} else {
-		bs.b[internalIndex-1] = original | 0b00000001<<(8-internalIndex)
+		bs.b[internalIndex-1] = original | 0b00000001<<(8-shiftIndex)
 	}
 }
 
-func (bs *Bitset) Append(elm bool) {
-	next := bs.len
+func (bs *Bitset) Append(elm ...bool) {
+	for _, b := range elm {
+		next := bs.len
 
-	if bs.len >= len(bs.b)*8 {
-		bs.b = append(bs.b, 0b00000000)
+		if bs.len >= len(bs.b)*8 {
+			bs.b = append(bs.b, 0b00000000)
+		}
+
+		bs.len++
+		bs.Set(next, b)
 	}
-
-	bs.len++
-	bs.Set(next, elm)
 }

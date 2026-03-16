@@ -131,21 +131,16 @@ func TestNewBitset(t *testing.T) {
 }
 
 func TestSet(t *testing.T) {
-	bs := Bitset{
-		b:   []uint8{0b10101010, 0b10},
-		len: 10,
+	bs := NewBitset()
+	bs.Append(true, true, true, true, true, true, true, true)
+
+	for i := range bs.len - 1 {
+		bs.Set(i, false)
+		if bs.At(i) {
+			t.Errorf("failed to set idx %d bit to false", i)
+		}
 	}
 
-	bs.Set(0, false)
-
-	if bs.At(0) {
-		t.Error("failed to set true bit to false")
-	}
-	bs.Set(0, true)
-
-	if !bs.At(0) {
-		t.Error("failed to set false bit to true")
-	}
 }
 func TestAppend(t *testing.T) {
 	bs := NewBitset()
@@ -159,7 +154,7 @@ func TestAppend(t *testing.T) {
 	if bs.Len() != 1 {
 		t.Fatal("failed to incr bitset len")
 	}
-	
+
 	if !bs.At(0) {
 		t.Error("failed to realloc bitset and set first bit to true")
 	}
