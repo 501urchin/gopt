@@ -26,7 +26,8 @@ func TestBitsetIter(t *testing.T) {
 
 func TestBitsetAt(t *testing.T) {
 	bs := Bitset{
-		b: []uint8{0b10101010, 0b10},
+		b:   []uint8{0b10101010, 0b10},
+		len: 10,
 	}
 
 	t.Run("gets correct state", func(t *testing.T) {
@@ -120,13 +121,30 @@ func TestNewBitset(t *testing.T) {
 	})
 
 	t.Run("zero size", func(t *testing.T) {
-
 		bs := NewBitset()
 		if len(bs.b) != 0 {
 			t.Error("failed to create a bitset of the expected size")
 		}
 	})
 
+}
+
+func TestSet(t *testing.T) {
+	bs := Bitset{
+		b:   []uint8{0b10101010, 0b10},
+		len: 10,
+	}
+
+	bs.Set(0, false)
+
+	if bs.At(0) {
+		t.Error("failed to set true bit to false")
+	}
+	bs.Set(0, true)
+
+	if !bs.At(0) {
+		t.Error("failed to set false bit to true")
+	}
 }
 
 func BenchmarkBitset(b *testing.B) {
