@@ -1,5 +1,7 @@
 package gopt
 
+import "fmt"
+
 type Bitset struct {
 	b   []uint8
 	len int
@@ -44,8 +46,8 @@ func (bs *Bitset) At(idx int) bool {
 		panic("cannot index on negative")
 	}
 
-	if idx > bs.len {
-		panic("overflowing bitset index")
+	if idx >= bs.len {
+		panic(fmt.Errorf("invalid bitset index %d of len %d", idx, bs.len))
 	}
 
 	idx++
@@ -65,14 +67,18 @@ func (bs *Bitset) At(idx int) bool {
 func (bs *Bitset) Len() int {
 	return bs.len
 }
+func (bs *Bitset) Cap() int {
+	return len(bs.b) * 8
+}
 
+// Set is used to set a bool at a specific index
 func (bs *Bitset) Set(idx int, state bool) {
 	if idx < 0 {
 		panic("cannot index on negative")
 	}
 
-	if idx > bs.len-1 {
-		panic("overflowing bitset index")
+	if idx >= bs.len {
+		panic(fmt.Errorf("invalid bitset index %d of len %d", idx, bs.len))
 	}
 
 	idx++
@@ -91,4 +97,14 @@ func (bs *Bitset) Set(idx int, state bool) {
 		bs.b[internalIndex-1] = original | 0b00000001<<(8-internalIndex)
 	}
 }
-func (bs *Bitset) Append(elm bool) {}
+
+func (bs *Bitset) Append(elm bool) {
+	next := bs.len
+
+	if bs.len >= len(bs.b)*8 {
+		bs.b = append(bs.b, 0b00000000)
+	}
+
+	bs.len++
+	bs.Set(next, elm)
+}

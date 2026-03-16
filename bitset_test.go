@@ -7,7 +7,8 @@ import (
 
 func TestBitsetIter(t *testing.T) {
 	bs := Bitset{
-		b: []uint8{0b10101010},
+		b:   []uint8{0b10101010},
+		len: 10,
 	}
 
 	res := make([]bool, 0, 8)
@@ -63,7 +64,7 @@ func TestBitsetAt(t *testing.T) {
 			t.Error("bit 7 should be false")
 		}
 
-		if bs.At(10) != false {
+		if bs.At(9) != false {
 			t.Error("bit 10 should be false")
 		}
 
@@ -145,6 +146,24 @@ func TestSet(t *testing.T) {
 	if !bs.At(0) {
 		t.Error("failed to set false bit to true")
 	}
+}
+func TestAppend(t *testing.T) {
+	bs := NewBitset()
+
+	if bs.len > 0 {
+		t.Error("failed to allocate a bitset with zero len")
+	}
+
+	bs.Append(true)
+
+	if bs.Len() != 1 {
+		t.Fatal("failed to incr bitset len")
+	}
+	
+	if !bs.At(0) {
+		t.Error("failed to realloc bitset and set first bit to true")
+	}
+
 }
 
 func BenchmarkBitset(b *testing.B) {
