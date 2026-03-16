@@ -176,6 +176,7 @@ func BenchmarkBitset(b *testing.B) {
 	b.Run("bitset", func(b *testing.B) {
 		bs := Bitset{
 			b: []uint8{0b101},
+			len: 3,
 		}
 
 		tmp := true

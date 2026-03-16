@@ -42,69 +42,43 @@ func (bs *Bitset) Items(yield func(bool) bool) {
 }
 
 func (bs *Bitset) At(idx int) bool {
-	if idx < 0 {
-		panic("cannot index on negative")
-	}
-
-	if idx >= bs.len {
+	if idx < 0 || idx >= bs.len {
 		panic(fmt.Errorf("invalid bitset index %d of len %d", idx, bs.len))
 	}
 
-	idx++
+	byteIndex := idx / 8
+	bitIndex := idx % 8
+	var mask uint8 = 1 << (7 - bitIndex)
 
-	internalIndex := (idx + 7) / 8
-	next := internalIndex*8 - idx
+	return bs.b[byteIndex]&mask != 0
+}
 
-	if internalIndex > len(bs.b) {
-		panic("index overflows")
+// Set is used to set a bool at a specific index
+func (bs *Bitset) Set(idx int, state bool) {
+	if idx < 0 || idx >= bs.len {
+		panic(fmt.Errorf("invalid bitset index %d of len %d", idx, bs.len))
 	}
 
-	b := bs.b[internalIndex-1] >> next & 0b00000001
+	byteIndex := idx / 8
+	bitIndex := idx % 8
+	var mask uint8 = 1 << (7 - bitIndex)
 
-	return b != 0
+	if state {
+		bs.b[byteIndex] |= mask
+	} else {
+		bs.b[byteIndex] &^= mask
+	}
 }
 
 func (bs *Bitset) Len() int {
 	return bs.len
 }
-func (bs *Bitset) Cap() int {
-	return len(bs.b) * 8
-}
-
-// Set is used to set a bool at a specific index
-func (bs *Bitset) Set(idx int, state bool) {
-	if idx < 0 {
-		panic("cannot index on negative")
-	}
-
-	if idx >= bs.len {
-		panic(fmt.Errorf("invalid bitset index %d of len %d", idx, bs.len))
-	}
-	idx++
-	shiftIndex := idx
-	if idx > 8 {
-		shiftIndex = idx % 8
-	}
-
-	internalIndex := (idx + 7) / 8
-	if internalIndex > len(bs.b) {
-		panic("index overflows")
-	}
-	original := bs.b[internalIndex-1]
-
-	if !state {
-		bs.b[internalIndex-1] = original ^ 0b00000001<<(8-shiftIndex)
-	} else {
-		bs.b[internalIndex-1] = original | 0b00000001<<(8-shiftIndex)
-	}
-}
-
 func (bs *Bitset) Append(elm ...bool) {
 	for _, b := range elm {
 		next := bs.len
 
 		if bs.len >= len(bs.b)*8 {
-			bs.b = append(bs.b, 0b00000000)
+			bs.b = append(bs.b, 0)
 		}
 
 		bs.len++
