@@ -2,6 +2,7 @@ package gopt
 
 import (
 	"fmt"
+	"slices"
 )
 
 type NumberConstraint interface {
@@ -87,6 +88,13 @@ func (rb *RingBuffer[T]) Cap() int {
 
 func (rb *RingBuffer[T]) Len() int {
 	return len(rb.buf)
+}
+func (rb *RingBuffer[T]) Max() T {
+	return slices.Max(rb.buf)
+}
+
+func (rb *RingBuffer[T]) Min() T {
+	return slices.Min(rb.buf)
 }
 
 func (rb *RingBuffer[T]) BackingSlice() []T {
